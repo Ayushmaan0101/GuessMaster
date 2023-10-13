@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuessMaster: The Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #000 0%, #002260 30%, #005ab6 50%, #002260 70%, #000 100%);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        .frame {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 90%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #00ffea;
+        }
+
+        .instruction {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #00ffea;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 10px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #005ab6, #00ffea);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            animation: button-pulse 1s infinite;
+        }
+
+        .difficulty-button {
+            font-size: 1.2em;
+            color: #00ffea;
+        }
+
+        .attempts-remaining {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #00ffea;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 100%;
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ffea;
+            outline: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+            animation: input-pulse 1s infinite;
+        }
+
+        input[type="number"].input-clicked,
+        input[type="number"].input-has-value {
+            animation: none;
+        }
+
+        input[type="number"]:hover,
+        input[type="number"]:focus {
+            box-shadow: 0 0 10px rgba(0, 255, 234, 0.7), 0 0 20px rgba(0, 255, 234, 0.7);
+            animation: none;
+        }
+
+        .button-clicked {
+            animation: none;
+        }
+
+        @keyframes button-pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes input-pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #result {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: grey;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="frame">
+        <div class="container">
+            <h1>GuessMaster: The Number Guessing Game</h1>
+            <button id="start-button">Start Game</button>
+            <div id="game-container" class="hidden">
+                <p class="instruction">
+                    I'm thinking of a number between 1 and 100.
+                </p>
+                <p>Your mission is to guess it.</p>
+                <p>Choose a Difficulty: 'easy' or 'hard'?</p>
+                <button id="easy-button" class="difficulty-button">Easy</button>
+                <button id="hard-button" class="difficulty-button">Hard</button>
+                <p class="attempts-remaining" id="attempts-remaining-text"></p>
+                <div class="input-container">
+                    <input type="number" id="guess-input" placeholder="Enter your guess" class="hidden">
+                </div>
+                <button id="guess-button" class="hidden">Guess</button>
+                <p id="result"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.getElementById('start-button');
+            const gameContainer = document.getElementById('game-container');
+            const easyButton = document.getElementById('easy-button');
+            const hardButton = document.getElementById('hard-button');
+            const attemptsRemainingText = document.getElementById('attempts-remaining-text');
+            const guessInput = document.getElementById('guess-input');
+            const guessButton = document.getElementById('guess-button');
+            const resultText = document.getElementById('result');
+
+            let random_number;
+            let max_attempts;
+            let attempts_remaining;
+
+            let isGameStarted = false;
+
+            startButton.addEventListener('click', () => {
+                gameContainer.classList.remove('hidden');
+                startButton.style.display = 'none';
+                isGameStarted = true;
+            });
+
+            easyButton.addEventListener('click', () => {
+                if (isGameStarted) {
+                    max_attempts = 10;
+                    attempts_remaining = max_attempts;
+                    attemptsRemainingText.textContent = `You have ${attempts_remaining} attempts remaining to guess the number.`;
+                    random_number = Math.floor(Math.random() * 100) + 1;
+                    guessInput.classList.remove('hidden');
+                    guessButton.classList.remove('hidden');
+                    easyButton.style.display = 'none';
+                    hardButton.style.display = 'none';
+                    easyButton.classList.add('button-clicked');
+                }
+            });
+
+            hardButton.addEventListener('click', () => {
+                if (isGameStarted) {
+                    max_attempts = 5;
+                    attempts_remaining = max_attempts;
+                    attemptsRemainingText.textContent = `You have ${attempts_remaining} attempts remaining to guess the number.`;
+                    random_number = Math.floor(Math.random() * 100) + 1;
+                    guessInput.classList.remove('hidden');
+                    guessButton.classList.remove('hidden');
+                    hardButton.style.display = 'none';
+                    easyButton.style.display = 'none';
+                    hardButton.classList.add('button-clicked');
+                }
+            });
+
+            guessButton.addEventListener('click', () => {
+                if (isGameStarted) {
+                    const userGuess = parseInt(guessInput.value);
+                    if (isNaN(userGuess)) {
+                        resultText.textContent = "Please enter a valid number.";
+                    } else {
+                        attempts_remaining--;
+                        attemptsRemainingText.textContent = `You have ${attempts_remaining} attempts remaining to guess the number.`;
+
+                        if (userGuess > random_number) {
+                            resultText.textContent = "Too High. Guess again.";
+                        } else if (userGuess < random_number) {
+                            resultText.textContent = "Too Low. Guess again.";
+                        } else if (userGuess === random_number) {
+                            resultText.textContent = `You got it! The answer was ${random_number}`;
+                            resultText.style.color = 'green';
+                            guessButton.disabled = true;
+                        }
+
+                        if (attempts_remaining === 0 && userGuess !== random_number) {
+                            resultText.textContent = `Game Over. The answer was ${random_number}`;
+                            resultText.style.color = 'red';
+                            guessButton.disabled = true;
+                        }
+                    }
+                }
+            });
+
+            guessInput.addEventListener('click', () => {
+                guessInput.classList.remove('input-pulse');
+                guessInput.classList.remove('input-clicked');
+            });
+
+            guessInput.addEventListener('input', () => {
+                if (guessInput.value.trim() !== '') {
+                    guessInput.classList.remove('input-pulse');
+                    guessInput.classList.add('input-clicked');
+                } else {
+                    guessInput.classList.add('input-pulse');
+                    guessInput.classList.remove('input-clicked');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
